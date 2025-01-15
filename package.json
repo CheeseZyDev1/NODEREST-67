@@ -1,0 +1,20 @@
+{
+  "name": "noderest-67",
+  "version": "1.0.0",
+  "description": "Repo for Node.js RESTful API Tutorial",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "format": "prettier --write *.js"
+  },
+  "keywords": [],
+  "author": "Napat Nueyen",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
