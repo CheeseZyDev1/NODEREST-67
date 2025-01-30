@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "format": "prettier --write *.js",
-    "crud": "node CRUDBookNoDB.js"
+    "crud": "nodemon CRUDBookNoDB.js"
   },
   "keywords": [],
   "author": "Napat Nueyen",
