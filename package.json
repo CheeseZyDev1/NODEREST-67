@@ -2,11 +2,11 @@
   "name": "noderest-67",
   "version": "1.0.0",
   "description": "Repo for Node.js RESTful API Tutorial",
-  "main": "index.js",
+  "main": "CRUDBookNoDB.js",
   "scripts": {
     "start": "node index.js",
     "format": "prettier --write *.js",
-    "testcrud": "node CRUDBookNoDB.js"
+    "crud": "node CRUDBookNoDB.js"
   },
   "keywords": [],
   "author": "Napat Nueyen",
