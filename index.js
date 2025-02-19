@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 // Connect to the MongoDB database
-mongoose.connect('mongodb://admin:DAEqol61278@node74688-noderest-67.proen.app.ruk-com.cloud:11785', {
+mongoose.connect('mongodb://admin:DAEqol61278@node74688-noderest-67.proen.app.ruk-com.cloud:27017', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
