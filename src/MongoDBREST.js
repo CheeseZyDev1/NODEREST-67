@@ -1,98 +1,71 @@
 // Description: REST API with MongoDB
-// npm install express mongoose body-parser
-// Run this file with node MongoDBREST.js
+// npm install express mongoose
+// Run this file with node index.js
 // Test with Postman
 
-const express = require("express");
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+app.use(express.json());
 
-// Database connection
-mongoose.connect(
-  "mongodb://admin:SBFsqa14913@node40731-noderest.proen.app.ruk-com.cloud:11344",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
+// Connect to the MongoDB database
+mongoose.connect('mongodb://admin:DAEqol61278@node74688-noderest-67.proen.app.ruk-com.cloud:11785', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+// Define the book model
+const bookSchema = new mongoose.Schema({
+  id : Number,
+  title: String,
+  author: String
+});
+
+const Book = mongoose.model('Book', bookSchema);
+
+// API routes
+// Create a new book with auto-increase id 1,2,3,4,5...
+app.post('/books', async (req, res) => {
+  const lastBook = await Book.findOne().sort({ id: -1 });
+  const newId = lastBook ? lastBook.id + 1 : 1;
+  const book = new Book({
+    id: newId,
+    title: req.body.title,
+    author: req.body.author
+  });
+  await book.save();
+  res.send(book);
+}
 );
 
-const Book = mongoose.model("Book", {
-  id: {
-    type: Number,
-    unique: true, // Ensures uniqueness of the "id" field
-    required: true, // If you want "id" to be required
-  },
-  title: String,
-  author: String,
+// route /books will be used to get all books
+// Get a list of all books
+app.get('/books', async (req, res) => {
+  const books = await Book.find();
+  res.send(books);
 });
 
-const app = express();
-app.use(bodyParser.json());
-
-// Create
-app.post("/books", async (req, res) => {
-  try {
-    // Get the last book record to determine the next ID
-    const lastBook = await Book.findOne().sort({ id: -1 });
-    const nextId = lastBook ? lastBook.id + 1 : 1;
-
-    // Create a new book with the next ID
-    const book = new Book({
-      id: nextId, // Set the custom "id" field
-      ...req.body, // Include other book data from the request body
-    });
-
-    await book.save();
-    res.send(book);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+// Get a single book by id
+app.get('/books/:id', async (req, res) => {
+  const book = await Book.findOne({ id: req.params.id });
+  res.send(book);
 });
 
-// Read all
-app.get("/books", async (req, res) => {
-  try {
-    const books = await Book.find();
-    res.send(books);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+// Update a book
+app.put('/books/:id', async (req, res) => {
+  const book = await Book.findOne({ id: req.params.id });
+  book.title = req.body.title;
+  book.author = req.body.author;
+  await book.save();
+  res.send(book);
 });
 
-// Read one
-app.get("/books/:id", async (req, res) => {
-  try {
-    const book = await Book.findOne({ id: req.params.id });
-    res.send(book);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+// Delete a book
+app.delete('/books/:id', async (req, res) => {
+  const result = await Book.deleteOne({ id: req.params.id });
+  res.send(result);
 });
 
-// Update
-app.put("/books/:id", async (req, res) => {
-  try {
-    const book = await Book.findOneAndUpdate({ id: req.params.id }, req.body, {
-      new: true,
-    });
-    res.send(book);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
 
-// Delete
-app.delete("/books/:id", async (req, res) => {
-  try {
-    const book = await Book.findOneAndDelete({ id: req.params.id });
-    res.send(book);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Start the server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server started at http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log('API server is listening on port 3000');
 });
